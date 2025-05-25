@@ -3,14 +3,24 @@
 
 一个创新的大模型评测和竞技平台，通过轮流裁判机制实现公平、全面的模型能力评估。
 
-## ✨ 特性
+## ✨ 主要特性
 
-- 🏆 **轮流裁判机制**: 每个模型都有机会当裁判和参赛选手，确保评测公平性
-- 🎯 **多维度评测**: 支持逻辑推理、数学计算、创意写作、知识问答、编程算法等多个领域
-- 🔌 **多平台支持**: 兼容 OpenAI、Anthropic、Google、阿里云等主流大模型API
-- 📊 **详细分析**: 提供丰富的统计分析和可视化报告
-- 🎮 **交互式界面**: 友好的命令行界面，支持配置管理和实时监控
-- 📚 **丰富题库**: 内置多种类型和难度的问题，支持自定义扩展
+### 🌐 在线Web系统
+- **📱 Gradio界面**: 现代化Web界面，支持实时问答和统计
+- **💬 即时问答**: 用户提问后立即获得多模型回答和排名
+- **📊 实时统计**: 动态更新的排行榜和问答记录
+- **🗄️ 数据持久化**: SQLite数据库存储所有问答历史
+- **📈 可视化图表**: 实时生成统计图表和趋势分析
+
+### 🤖 核心竞技功能
+- **🏆 轮流裁判机制**: 每个模型都有机会当裁判和参赛选手，确保评测公平性
+- **🎯 多维度评测**: 支持逻辑推理、数学计算、创意写作、知识问答、编程算法等多个领域
+- **🔌 多平台支持**: 兼容 OpenAI、Anthropic、Google、阿里云等主流大模型API
+- **📊 详细分析**: 提供丰富的统计分析和可视化报告
+- **🎮 交互式界面**: 友好的命令行界面和Web界面，支持配置管理和实时监控
+- **📚 丰富题库**: 内置多种类型和难度的问题，支持自定义扩展
+- **⚙️ 高度可配置**: 支持自定义评分规则、问题难度、并发设置等
+- **🔄 异步处理**: 支持并行API调用，提高竞技效率
 
 ## 🚀 快速开始
 
@@ -20,14 +30,16 @@
 pip install -r requirements.txt
 ```
 
-### 2. 配置模型
+### 2. 配置API密钥
 
-运行配置向导：
+复制示例配置文件并编辑：
+
 ```bash
-python cli.py config --setup
+cp config.example.json config.json
 ```
 
-或直接编辑 `config.json` 文件：
+编辑 `config.json` 文件，填入您的API密钥：
+
 ```json
 {
   "models": [
@@ -42,17 +54,39 @@ python cli.py config --setup
 }
 ```
 
-### 3. 运行竞技
+### 3. 运行系统
+
+#### 🌐 在线Web界面（推荐）
+
+启动Gradio在线系统：
 
 ```bash
-# 交互式运行
+python start_gradio.py
+```
+
+然后在浏览器中访问 `http://localhost:7860`
+
+#### 📱 一次性批量竞技
+
+使用命令行界面：
+
+```bash
 python cli.py run
+```
 
-# 自动运行
-python cli.py run --auto
+使用Python API：
 
-# 或直接运行主程序
-python llm_competition.py
+```python
+from llm_competition import LLMCompetition
+
+# 创建竞技实例
+competition = LLMCompetition("config.json")
+
+# 运行竞技
+result = await competition.run_competition()
+
+# 查看结果
+print(result)
 ```
 
 ### 4. 查看结果
@@ -69,38 +103,98 @@ python result_analyzer.py
 
 ```
 LLM1566/
-├── llm_competition.py    # 主竞技逻辑
-├── model_api.py         # 大模型API调用
-├── question_bank.py     # 问题库管理
-├── result_analyzer.py   # 结果分析和可视化
-├── cli.py              # 命令行界面
-├── config.json         # 配置文件
-├── requirements.txt    # 依赖包列表
-└── README.md          # 项目说明
+├── config.json              # 主配置文件
+├── config.example.json      # 示例配置文件
+├── llm_competition.py       # 核心竞技逻辑
+├── model_api.py            # 模型API接口
+├── question_bank.py        # 问题库管理
+├── result_analyzer.py      # 结果分析器
+├── cli.py                  # 命令行界面
+├── gradio_app.py           # Gradio在线界面
+├── start_gradio.py         # Gradio启动脚本
+├── test_system.py          # 系统测试脚本
+├── requirements.txt        # 依赖列表
+├── Dockerfile              # Docker配置
+├── docker-compose.yml      # Docker Compose配置
+├── README.md              # 项目文档
+├── online_competition.db   # 在线系统数据库
+├── results/               # 结果输出目录
+│   ├── competition_YYYYMMDD_HHMMSS.json
+│   ├── competition_YYYYMMDD_HHMMSS.xlsx
+│   └── charts/
+└── logs/                  # 日志目录
 ```
 
-## 🎯 使用指南
+## 📖 使用指南
 
-### 命令行界面
+### 🌐 在线Web系统
+
+#### 启动系统
+
+```bash
+# 快速启动（推荐）
+python start_gradio.py
+
+# 或直接运行
+python gradio_app.py
+```
+
+#### 使用界面
+
+1. **问答页面**:
+   - 在输入框中输入任何问题
+   - 点击"提交问题"按钮
+   - 查看各模型的回答和排名结果
+   - 系统自动保存结果到数据库
+
+2. **统计页面**:
+   - 查看实时更新的模型排行榜
+   - 浏览最近的问答记录
+   - 查看统计图表和趋势分析
+   - 点击"刷新数据"获取最新信息
+
+#### Docker部署
+
+```bash
+# 使用Docker Compose（推荐）
+docker-compose up -d
+
+# 或使用Docker
+docker build -t llm-competition .
+docker run -p 7860:7860 -v ./config.json:/app/config.json llm-competition
+```
+
+### 📱 命令行界面
 
 ```bash
 # 查看帮助
 python cli.py --help
 
-# 运行竞技
-python cli.py run [--auto] [--models N] [--questions N]
-
 # 配置管理
-python cli.py config [--setup]
+python cli.py config --setup          # 交互式配置
+python cli.py config --validate       # 验证配置
+python cli.py config --show          # 显示当前配置
 
 # 问题库管理
-python cli.py questions [--list]
+python cli.py questions --list        # 列出所有问题
+python cli.py questions --add         # 添加新问题
+python cli.py questions --stats       # 问题库统计
+
+# 运行竞技
+python cli.py run                     # 交互式运行
+python cli.py run --auto              # 自动运行
+python cli.py run --questions 10      # 指定问题数量
+python cli.py run --difficulty hard   # 指定难度
 
 # 结果分析
-python cli.py analyze [--file results.json]
+python cli.py analyze results/latest.json  # 分析结果
+python cli.py analyze --compare            # 比较多次结果
 
 # 演示模式
-python cli.py demo
+python cli.py demo                    # 运行演示
+
+# 系统测试
+python test_system.py                 # 运行系统测试
 ```
 
 ### 交互式模式

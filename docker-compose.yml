@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  llm-competition:
+    build: .
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./config.json:/app/config.json:ro
+      - ./data:/app/data
+      - ./online_competition.db:/app/online_competition.db
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 可选：添加数据库备份服务
+  db-backup:
+    image: alpine:latest
+    volumes:
+      - ./data:/data
+      - ./online_competition.db:/app/online_competition.db:ro
+    command: >
+      sh -c '
+        while true; do
+          cp /app/online_competition.db /data/backup_$(date +%Y%m%d_%H%M%S).db
+          find /data -name "backup_*.db" -mtime +7 -delete
+          sleep 86400
+        done
+      '
+    restart: unless-stopped
+
+volumes:
+  data:
+    driver: local
