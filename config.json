@@ -1,0 +1,47 @@
+{
+  "models": [
+    {
+      "name": "GPT-4",
+      "api_key": "your_openai_api_key_here",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-4",
+      "provider": "openai"
+    },
+    {
+      "name": "Claude-3",
+      "api_key": "your_anthropic_api_key_here",
+      "base_url": "https://api.anthropic.com",
+      "model": "claude-3-opus-20240229",
+      "provider": "anthropic"
+    },
+    {
+      "name": "Gemini-Pro",
+      "api_key": "your_google_api_key_here",
+      "base_url": "https://generativelanguage.googleapis.com/v1",
+      "model": "gemini-pro",
+      "provider": "google"
+    },
+    {
+      "name": "通义千问",
+      "api_key": "your_dashscope_api_key_here",
+      "base_url": "https://dashscope.aliyuncs.com/api/v1",
+      "model": "qwen-max",
+      "provider": "dashscope"
+    }
+  ],
+  "competition_settings": {
+    "min_models": 3,
+    "question_generation": {
+      "enabled": true,
+      "count": 10,
+      "difficulty": "medium",
+      "topics": ["逻辑推理", "数学计算", "创意写作", "知识问答", "编程算法"]
+    },
+    "scoring": {
+      "first_place": 3,
+      "second_place": 2,
+      "third_place": 1,
+      "other_place": 0
+    }
+  }
+}
